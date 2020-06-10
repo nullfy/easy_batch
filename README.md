@@ -3,7 +3,9 @@
 
 # 安装
 ```shell
-go get -v github.com/mumusa/easy_batch.git
+go get -v github.com/mumusa/easy_batch
+
+go install github.com/mumusa/easy_batch
 ```
 
 # 使用
