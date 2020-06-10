@@ -1,11 +1,11 @@
 package main
 
 import (
-	"easy_batch/git"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/mumusa/easy_batch/git"
 	"github.com/urfave/cli/v2"
 )
 
