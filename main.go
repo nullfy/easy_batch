@@ -8,7 +8,7 @@ import (
 	"github.com/mumusa/easy_batch/git"
 	"github.com/urfave/cli/v2"
 )
-//go:generate  git pull :\etc\woda\modules\
+
 func main() {
 	app := &cli.App{
 		Name:    "easy_batch",

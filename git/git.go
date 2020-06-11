@@ -25,7 +25,6 @@ func HandlerArgs(args []string) {
 		direct := true
 		if IsDir(last_arg) {
 			direct = false
-			fmt.Println("args",args)
 			if runtime.GOOS == "windows" {
 				if last_arg[0:1] == "." {
 					current_path = current_path + "/" + last_arg
@@ -74,7 +73,6 @@ func HandlerArgs(args []string) {
 }
 
 func GetCurrentShellWd() string {
-	fmt.Println(os.Args)
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -119,7 +117,5 @@ func ExecCmd(command string) (str string) {
 		fmt.Println("wait:", err.Error())
 		return
 	}
-	//fmt.Println("cmd\n", command)
-	//fmt.Println("stdout\n", string(bytes))
 	return string(bytes)
 }
