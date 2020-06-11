@@ -26,8 +26,8 @@ func HandlerArgs(args []string) {
 			direct = false
 			if runtime.GOOS == "windows" {
 				if last_arg[0:1] == "." {
-					current_path = current_path + "/" + last_arg
-				} else {
+					current_path = current_path + last_arg
+				} else if strings.Contains(last_arg,":") {
 					current_path = last_arg
 				}
 			} else {
