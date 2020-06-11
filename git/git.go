@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"io/ioutil"
 	"log"
 	"os"
@@ -10,8 +11,6 @@ import (
 	"runtime"
 	"strings"
 	"sync"
-
-	"github.com/fatih/color"
 )
 
 const (
@@ -38,9 +37,6 @@ func HandlerArgs(args []string) {
 					current_path = current_path + "/" + last_arg
 				}
 			}
-		} else {
-			fmt.Printf("%s\t %s\n",  color.YellowString("[Warning]"), "please input correct path")
-			return
 		}
 		stdouts := GetAllLocalRepo(current_path)
 		repos := strings.Split(stdouts, "\n")
@@ -60,7 +56,6 @@ func HandlerArgs(args []string) {
 					git_path := strings.Replace(path, ".git", "", 1)
 					git_path = strings.Replace(git_path, "//", "/", 2)
 					git_cmd := "cd " + git_path + " && " + cmd
-					fmt.Println(cmd, git_path)
 					out := ExecCmd(git_cmd)
 					fmt.Printf("%s %s\n %s\n", "[PATH]", color.YellowString(git_path), out)
 				}(wg, r)
@@ -77,12 +72,10 @@ func GetCurrentShellWd() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//fmt.Println(dir)
 	return dir
 }
 
 func IsDir(path string) (b bool) {
-	fmt.Println("Dir",path)
 	_, err := os.Stat(path)
 	if err != nil {
 		return false
@@ -114,7 +107,7 @@ func ExecCmd(command string) (str string) {
 		return
 	}
 	if err := cmd.Wait(); err != nil {
-		fmt.Println("wait:", err.Error())
+		//fmt.Println("wait:", err.Error())
 		return
 	}
 	return string(bytes)
