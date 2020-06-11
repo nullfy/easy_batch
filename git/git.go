@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 
@@ -24,12 +25,23 @@ func HandlerArgs(args []string) {
 		direct := true
 		if IsDir(last_arg) {
 			direct = false
-			if last_arg[0:1] == "/" {
-				current_path = last_arg
+			fmt.Println("args",args)
+			if runtime.GOOS == "windows" {
+				if last_arg[0:1] == "." {
+					current_path = current_path + "/" + last_arg
+				} else {
+					current_path = last_arg
+				}
 			} else {
-				current_path = current_path + "/" + last_arg
+				if last_arg[0:1] == "/" {
+					current_path = last_arg
+				} else {
+					current_path = current_path + "/" + last_arg
+				}
 			}
-
+		} else {
+			fmt.Printf("%s\t %s\n",  color.YellowString("[Warning]"), "please input correct path")
+			return
 		}
 		stdouts := GetAllLocalRepo(current_path)
 		repos := strings.Split(stdouts, "\n")
@@ -62,7 +74,7 @@ func HandlerArgs(args []string) {
 }
 
 func GetCurrentShellWd() string {
-	//fmt.Println(os.Args)
+	fmt.Println(os.Args)
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -72,6 +84,7 @@ func GetCurrentShellWd() string {
 }
 
 func IsDir(path string) (b bool) {
+	fmt.Println("Dir",path)
 	_, err := os.Stat(path)
 	if err != nil {
 		return false
