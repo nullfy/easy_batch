@@ -19,27 +19,18 @@ const (
 
 func HandlerArgs(args []string) {
 	if len(args) >= 2 {
-		last_arg := args[len(args)-1]
 		current_path := GetCurrentShellWd()
 		direct := true
-		if IsDir(last_arg) {
-			direct = false
-			if runtime.GOOS == "windows" {
-				if last_arg[0:1] == "." {
-					current_path = current_path + last_arg
-				} else if strings.Contains(last_arg,":") {
-					current_path = last_arg
-				}
+		last_arg := os.Args[len(os.Args)-1]
+		if runtime.GOOS == "darwin" && IsDir(last_arg) {
+			if last_arg[0:1] == "/" {
+				current_path = last_arg
 			} else {
-				if last_arg[0:1] == "/" {
-					current_path = last_arg
-				} else {
-					current_path = current_path + "/" + last_arg
-				}
+				current_path = current_path + "/" + last_arg
 			}
+			direct = false
 		}
-		stdouts := GetAllLocalRepo(current_path)
-		repos := strings.Split(stdouts, "\n")
+		repos := GetAllLocalRepo(current_path)
 		var wg sync.WaitGroup
 		for _, r := range repos {
 			if IsDir(r) && len(r) > 0 {
@@ -77,17 +68,35 @@ func GetCurrentShellWd() string {
 
 func IsDir(path string) (b bool) {
 	_, err := os.Stat(path)
-	if err != nil {
-		return false
+	if err != nil{
+		return  false
 	}
 	return true
 }
 
-func GetAllLocalRepo(path string) string {
-	cmd := "find " + path + " -name .git"
-	ret := ExecCmd(cmd)
-	ret = strings.Replace(ret, "//", "/", 999)
-	return ret
+func GetAllLocalRepo(dir string) []string {
+	repos := make([]string,0)
+	if runtime.GOOS == "windows" {
+		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+			if !info.IsDir() {
+				return nil
+			}
+			if strings.HasSuffix(path,".git") {
+				repos = append(repos,strings.ReplaceAll(path,".git",""))
+			} else {
+				return nil
+			}
+			return nil
+		})
+		if err != nil {
+			fmt.Printf("GetAllLocalRepo:%s\n err:%s\n", dir,err)
+		}
+	} else {
+		cmd := "find " + dir + " -name .git"
+		ret := ExecCmd(cmd)
+		repos = strings.Split(ret, "\n")
+	}
+	return repos
 }
 
 func ExecCmd(command string) (str string) {
