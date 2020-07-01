@@ -13,9 +13,13 @@ go install github.com/mumusa/easy_batch
 # 使用
 最后的`[repo_path]`不填默认已当前目录，easy_batch会递归找所有本地仓库，并执行git相关操作
  ```shell
+ [Mac]
  easy_batch git pull [repo_path]
 
  easy_batch git checkout master [repo_path]
+ 
+ [Win] 不支持自定义路径，默认当前目录下的Git仓库操作
+ easy_batch git pull 
  
  ```
  
