@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/mumusa/easy_batch/git"
+	"github.com/nullfy/easy_batch/git"
 	"github.com/urfave/cli/v2"
 )
 

@@ -1,4 +1,4 @@
-module github.com/mumusa/easy_batch
+module github.com/nullfy/easy_batch
 
 go 1.13
 
